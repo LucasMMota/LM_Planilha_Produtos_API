@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessSheet;
 use App\Product;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,14 @@ class ProductsController extends Controller
         return response()->json(Product::all());
     }
 
-    public function store(Request $request)
+    public function store($sheetPath)
     {
-        $product = Product::create($request->all());
-        return response()->json($product, 201);
+
+        $job = new ProcessSheet($sheetPath);
+        var_dump($this->dispatch($job));
+
+        echo '\nSheet processed';
+
     }
 
     public function show(Product $product)
