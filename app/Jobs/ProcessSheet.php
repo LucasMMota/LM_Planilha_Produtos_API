@@ -32,6 +32,18 @@ class ProcessSheet implements ShouldQueue
      */
     public function handle()
     {
+
+        $fileData = Excel::load($this->sheetPath)->get();
+
+        if ($fileData) {
+            foreach ($fileData as $key => $value) {
+                //
+            }
+        } else {
+            // falha
+        }
+
+
         //
         //$product = $request->all();
         $product = new Product();
