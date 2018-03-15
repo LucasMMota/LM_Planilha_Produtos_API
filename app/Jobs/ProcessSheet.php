@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ProcessSheet implements ShouldQueue
 {
@@ -32,27 +33,22 @@ class ProcessSheet implements ShouldQueue
      */
     public function handle()
     {
+        $spreadsheet = IOFactory::load($this->sheetPath);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-        $fileData = Excel::load($this->sheetPath)->get();
+        $intProdCategory = $sheetData[1]['B'];
 
-        if ($fileData) {
-            foreach ($fileData as $key => $value) {
-                //
-            }
-        } else {
-            // falha
+        $i = 4;
+        while (isset($sheetData[$i])) { // se o código for vazio, assume-se que acabou a lista de produtos
+            $product = new Product;
+            $product->lm = $sheetData[$i][ProductsController::PROD_COL_KEYS['lm']];
+            $product->name = $sheetData[$i][ProductsController::PROD_COL_KEYS['name']];
+            $product->free_shipping = $sheetData[$i][ProductsController::PROD_COL_KEYS['free_shipping']];
+            $product->description = $sheetData[$i][ProductsController::PROD_COL_KEYS['description']];
+            $product->price = $sheetData[$i][ProductsController::PROD_COL_KEYS['price']];
+            // todo add category
+            $product->save();
+            $i++;
         }
-
-
-        //
-        //$product = $request->all();
-        $product = new Product();
-        $d = new \DateTime('now');
-        $product->lm = $d->format('00s');
-        $product->name = 'l';
-        $product->free_shipping = 1;
-        $product->description = 'aaa:' . $this->sheetPath;
-        $product->price = 10.00;
-        $product->save();
     }
 }

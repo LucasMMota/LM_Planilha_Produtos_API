@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\Queue;
 class ProductsController extends Controller
 {
 
+    protected const PROD_COL_KEYS = ['lm' => 'A', 'name' => 'B', 'free_shipping' => 'C', 'description' => 'D', 'price' => 'E',];
+
     public function index()
     {
         return response()->json(Product::all());
     }
 
-    public function store($sheetPath)
+    public function store()
     {
-
+        $sheetPath = '/Users/t40722/Projetos/Laravel_API/products_teste_webdev_leroy.xlsx';
         $job = new ProcessSheet($sheetPath);
         $job->onQueue('lmNewsProductsJob');
         $this->dispatch($job);
