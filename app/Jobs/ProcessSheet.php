@@ -15,6 +15,7 @@ class ProcessSheet implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $sheetPath;
+    protected const PROD_COL_KEYS = ['lm' => 'A', 'name' => 'B', 'free_shipping' => 'C', 'description' => 'D', 'price' => 'E',];
 
     /**
      * Create a new job instance.
@@ -41,12 +42,13 @@ class ProcessSheet implements ShouldQueue
         $i = 4;
         while (isset($sheetData[$i])) { // se o código for vazio, assume-se que acabou a lista de produtos
             $product = new Product;
-            $product->lm = $sheetData[$i][ProductsController::PROD_COL_KEYS['lm']];
-            $product->name = $sheetData[$i][ProductsController::PROD_COL_KEYS['name']];
-            $product->free_shipping = $sheetData[$i][ProductsController::PROD_COL_KEYS['free_shipping']];
-            $product->description = $sheetData[$i][ProductsController::PROD_COL_KEYS['description']];
-            $product->price = $sheetData[$i][ProductsController::PROD_COL_KEYS['price']];
-            // todo add category
+            $product->lm = $sheetData[$i][ProcessSheet::PROD_COL_KEYS['lm']];
+            $product->name = $sheetData[$i][ProcessSheet::PROD_COL_KEYS['name']];
+            $product->free_shipping = $sheetData[$i][ProcessSheet::PROD_COL_KEYS['free_shipping']];
+            $product->description = $sheetData[$i][ProcessSheet::PROD_COL_KEYS['description']];
+            $product->price = $sheetData[$i][ProcessSheet::PROD_COL_KEYS['price']];
+            $product->category = $intProdCategory;
+
             $product->save();
             $i++;
         }

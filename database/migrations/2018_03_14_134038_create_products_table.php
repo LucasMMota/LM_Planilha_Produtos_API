@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->boolean('free_shipping');
             $table->string('description');
             $table->decimal('price', 8, 2);
+            $table->integer('category');
             $table->timestamps();
         });
     }

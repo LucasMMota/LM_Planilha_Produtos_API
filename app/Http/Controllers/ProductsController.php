@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Queue;
 class ProductsController extends Controller
 {
 
-    protected const PROD_COL_KEYS = ['lm' => 'A', 'name' => 'B', 'free_shipping' => 'C', 'description' => 'D', 'price' => 'E',];
-
     public function index()
     {
         return response()->json(Product::all());
